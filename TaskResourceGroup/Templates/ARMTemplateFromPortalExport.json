@@ -1,0 +1,846 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "profiles_TaskCDN_name": {
+            "defaultValue": "TaskCDN",
+            "type": "String"
+        },
+        "alertrules_proactive_diagnostics___taskservicehectagon_name": {
+            "defaultValue": "proactive diagnostics - taskservicehectagon",
+            "type": "String"
+        },
+        "alertrules_proactive_diagnostics___taskwebhectagon_name": {
+            "defaultValue": "proactive diagnostics - taskwebhectagon",
+            "type": "String"
+        },
+        "components_taskmobileappservice_name": {
+            "defaultValue": "taskmobileappservice",
+            "type": "String"
+        },
+        "components_taskservicehectagon_name": {
+            "defaultValue": "taskservicehectagon",
+            "type": "String"
+        },
+        "components_taskwebhectagon_name": {
+            "defaultValue": "taskwebhectagon",
+            "type": "String"
+        },
+        "workflows_SendTaskCompleteEmail_name": {
+            "defaultValue": "SendTaskCompleteEmail",
+            "type": "String"
+        },
+        "workflows_SendTaskCompleteNotification_name": {
+            "defaultValue": "SendTaskCompleteNotification",
+            "type": "String"
+        },
+        "namespaces_TasksNotificationHub_name": {
+            "defaultValue": "TasksNotificationHub",
+            "type": "String"
+        },
+        "servers_taskssql_name": {
+            "defaultValue": "taskssql",
+            "type": "String"
+        },
+        "storageAccounts_function683e1a9a9c6b_name": {
+            "defaultValue": "function683e1a9a9c6b",
+            "type": "String"
+        },
+        "sites_TaskWebHectagon_name": {
+            "defaultValue": "TaskWebHectagon",
+            "type": "String"
+        },
+        "sites_TaskPushNotificationSendService_name": {
+            "defaultValue": "TaskPushNotificationSendService",
+            "type": "String"
+        },
+        "sites_TaskServiceHectagon_name": {
+            "defaultValue": "TaskServiceHectagon",
+            "type": "String"
+        },
+        "sites_TaskMobileAppService_name": {
+            "defaultValue": "TaskMobileAppService",
+            "type": "String"
+        },
+        "endpoints_taskwebhectagon_name": {
+            "defaultValue": "TaskCDN/taskwebhectagon",
+            "type": "String"
+        },
+        "origins_taskwebhectagon_azurewebsites_net_name": {
+            "defaultValue": "TaskCDN/taskwebhectagon/taskwebhectagon-azurewebsites-net",
+            "type": "String"
+        },
+        "accessKeys_default_name": {
+            "defaultValue": "SendTaskCompleteEmail/default",
+            "type": "String"
+        },
+        "accessKeys_default_name_1": {
+            "defaultValue": "SendTaskCompleteNotification/default",
+            "type": "String"
+        },
+        "notificationHubs_tasksnotificationhub_name": {
+            "defaultValue": "TasksNotificationHub/tasksnotificationhub",
+            "type": "String"
+        },
+        "databases_TasksMobileAppServiceDB_name": {
+            "defaultValue": "taskssql/TasksMobileAppServiceDB",
+            "type": "String"
+        },
+        "databases_TasksDB_name": {
+            "defaultValue": "taskssql/TasksDB",
+            "type": "String"
+        },
+        "databases_master_name": {
+            "defaultValue": "taskssql/master",
+            "type": "String"
+        },
+        "firewallRules_AllowAllWindowsAzureIps_name": {
+            "defaultValue": "taskssql/AllowAllWindowsAzureIps",
+            "type": "String"
+        },
+        "workflows_SendTaskCompleteEmail_id": {
+            "defaultValue": "/subscriptions/114d25c4-3f8f-4c41-83b1-22007178fc8c/resourceGroups/JustServiceResourceGroup/providers/Microsoft.Web/serverfarms/JustServiceAppServicePlan",
+            "type": "String"
+        },
+        "workflows_SendTaskCompleteEmail_connectionId": {
+            "defaultValue": "/subscriptions/114d25c4-3f8f-4c41-83b1-22007178fc8c/resourceGroups/Tasks/providers/Microsoft.Web/connections/office365-1",
+            "type": "String"
+        },
+        "workflows_SendTaskCompleteNotification_id": {
+            "defaultValue": "/subscriptions/114d25c4-3f8f-4c41-83b1-22007178fc8c/resourceGroups/JustServiceResourceGroup/providers/Microsoft.Web/serverfarms/JustServiceAppServicePlan",
+            "type": "String"
+        },
+        "sites_TaskWebHectagon_serverFarmId": {
+            "defaultValue": "/subscriptions/114d25c4-3f8f-4c41-83b1-22007178fc8c/resourceGroups/JustServiceResourceGroup/providers/Microsoft.Web/serverfarms/JustServiceAppServicePlan",
+            "type": "String"
+        },
+        "sites_TaskPushNotificationSendService_serverFarmId": {
+            "defaultValue": "/subscriptions/114d25c4-3f8f-4c41-83b1-22007178fc8c/resourceGroups/JustServiceResourceGroup/providers/Microsoft.Web/serverfarms/JustServiceAppServicePlan",
+            "type": "String"
+        },
+        "sites_TaskServiceHectagon_serverFarmId": {
+            "defaultValue": "/subscriptions/114d25c4-3f8f-4c41-83b1-22007178fc8c/resourceGroups/JustServiceResourceGroup/providers/Microsoft.Web/serverfarms/JustServiceAppServicePlan",
+            "type": "String"
+        },
+        "sites_TaskMobileAppService_serverFarmId": {
+            "defaultValue": "/subscriptions/114d25c4-3f8f-4c41-83b1-22007178fc8c/resourceGroups/JustServiceResourceGroup/providers/Microsoft.Web/serverfarms/JustServiceAppServicePlan",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "comments": "Generalized from resource: '/subscriptions/114d25c4-3f8f-4c41-83b1-22007178fc8c/resourcegroups/Tasks/providers/Microsoft.Cdn/profiles/TaskCDN'.",
+            "type": "Microsoft.Cdn/profiles",
+            "sku": {
+                "name": "Standard_Akamai"
+            },
+            "name": "[parameters('profiles_TaskCDN_name')]",
+            "apiVersion": "2016-04-02",
+            "location": "CentralUs",
+            "tags": {},
+            "properties": {
+                "provisioningState": "Succeeded",
+                "resourceState": "Active"
+            },
+            "resources": [],
+            "dependsOn": []
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/114d25c4-3f8f-4c41-83b1-22007178fc8c/resourceGroups/Tasks/providers/microsoft.insights/alertrules/proactive diagnostics - taskservicehectagon'.",
+            "type": "microsoft.insights/alertrules",
+            "name": "[parameters('alertrules_proactive_diagnostics___taskservicehectagon_name')]",
+            "apiVersion": "2014-04-01",
+            "location": "East US",
+            "tags": {
+                "hidden-link:/subscriptions/114d25c4-3f8f-4c41-83b1-22007178fc8c/resourcegroups/tasks/providers/microsoft.insights/components/taskservicehectagon": "Resource"
+            },
+            "properties": {
+                "name": "[parameters('alertrules_proactive_diagnostics___taskservicehectagon_name')]",
+                "description": "",
+                "isEnabled": true,
+                "condition": {
+                    "odata.type": "Microsoft.Azure.Management.Insights.Models.ThresholdRuleCondition",
+                    "dataSource": {
+                        "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleMetricDataSource",
+                        "resourceUri": "[resourceId('microsoft.insights/components', parameters('components_taskservicehectagon_name'))]",
+                        "metricName": "advanced::A3108E3D-5E26-44CF-B232-783F5E20EF10::ewAiAFcAaQBuAGQAbwB3AFMAaQB6AGUASQBuAE0AaQBuAHUAdABlAHMAIgA6ADYAMAAsACIATQBlAHQAcgBpAGMATgBhAG0AZQAiADoAIgAiACwAIgBUAGgAcgBlAHMAaABvAGwAZAAiADoAMgAuADAALAAiAEEAbABlAHIAdABUAGUAbQBwAGwAYQB0AGUASQBkACIAOgAiACIALAAiAFIAdQBsAGUASQBkACIAOgAiACIALAAiAFIAdQBsAGUATgBhAG0AZQAiADoAIgAiACwAIgBSAHUAbABlAEQAZQBzAGMAcgBpAHAAdABpAG8AbgAiADoAIgAiACwAIgBSAGUAcwBvAHUAcgBjAGUASQBkACIAOgBuAHUAbABsACwAIgBTAHUAYgBzAGMAcgBpAHAAdABpAG8AbgBJAGQAIgA6AG4AdQBsAGwALAAiAEEAZwBnAHIAZQBnAGEAdABlAEYAdQBuAGMAdABpAG8AbgAiADoAIgAiACwAIgBDAG8AbQBwAGEAcgBpAHMAbwBuAE8AcABlAHIAYQB0AG8AcgAiADoAIgB7AFwAIgBCAGEAcwBlAGwAaQBuAGUAVABpAG0AZQBzAHAAYQBuAFwAIgA6AFwAIgAwADAAOgA0ADAAOgAwADAAXAAiACwAXAAiAEkAbgBzAGkAZwBoAHQAcwBTAGUAcgB2AGkAYwBlAEwAYQBnAFwAIgA6AFwAIgAwADAAOgAwADAAOgAwADAAXAAiACwAXAAiAEIAdQBmAGYAZQByAFQAaQBtAGUAXAAiADoAXAAiADAAMAA6ADAAMQA6ADAAMABcACIALABcACIAQgBsAG8AYgBTAHQAbwByAGEAZwBlAEwAbwBnAGcAaQBuAGcARQBuAGEAYgBsAGUAZABcACIAOgBmAGEAbABzAGUALABcACIAVQBzAGUARABlAGYAYQB1AGwAdABBAHAAcABGAG8AcgBFAG0AYQBpAGwAcwBcACIAOgBmAGEAbABzAGUALABcACIAVQBzAGUAcgBTAHUAcABwAHIAZQBzAHMAaQBvAG4AcwBcACIAOgBuAHUAbABsACwAXAAiAFAAcgBvAGYAaQBsAGUASQBkAFwAIgA6ADMANgA1ADkAMwAwADkALABcACIARQBtAGEAaQBsAFQAeQBwAGUAXAAiADoAMAAsAFwAIgBSAGEAdwBQAHIAbwBhAGMAdABpAHYAZQBSAHUAbABlAEMAbwBuAGYAaQBnAFwAIgA6AG4AdQBsAGwAfQAiACwAIgBFAG4AYQBiAGwAZQBTAGUAbgBkAEUAbQBhAGkAbABUAG8AQwB1AHMAdABvAG0AIgA6AGYAYQBsAHMAZQAsACIAQwB1AHMAdABvAG0ARQBtAGEAaQBsAHMARQBuAGMAbwBkAGUAZAAiADoAIgAiACwAIgBFAG4AYQBiAGwAZQBTAGUAbgBkAEUAbQBhAGkAbABUAG8ATwB3AG4AZQByAHMAIgA6AGYAYQBsAHMAZQB9AA=="
+                    },
+                    "threshold": 2,
+                    "windowSize": "PT1H"
+                },
+                "action": {
+                    "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleEmailAction",
+                    "sendToServiceOwners": true,
+                    "customEmails": []
+                }
+            },
+            "resources": [],
+            "dependsOn": [
+                "[resourceId('microsoft.insights/components', parameters('components_taskservicehectagon_name'))]"
+            ]
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/114d25c4-3f8f-4c41-83b1-22007178fc8c/resourceGroups/Tasks/providers/microsoft.insights/alertrules/proactive diagnostics - taskwebhectagon'.",
+            "type": "microsoft.insights/alertrules",
+            "name": "[parameters('alertrules_proactive_diagnostics___taskwebhectagon_name')]",
+            "apiVersion": "2014-04-01",
+            "location": "East US",
+            "tags": {
+                "hidden-link:/subscriptions/114d25c4-3f8f-4c41-83b1-22007178fc8c/resourcegroups/tasks/providers/microsoft.insights/components/taskwebhectagon": "Resource"
+            },
+            "properties": {
+                "name": "[parameters('alertrules_proactive_diagnostics___taskwebhectagon_name')]",
+                "description": "",
+                "isEnabled": true,
+                "condition": {
+                    "odata.type": "Microsoft.Azure.Management.Insights.Models.ThresholdRuleCondition",
+                    "dataSource": {
+                        "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleMetricDataSource",
+                        "resourceUri": "[resourceId('microsoft.insights/components', parameters('components_taskwebhectagon_name'))]",
+                        "metricName": "advanced::A3108E3D-5E26-44CF-B232-783F5E20EF10::ewAiAFcAaQBuAGQAbwB3AFMAaQB6AGUASQBuAE0AaQBuAHUAdABlAHMAIgA6ADYAMAAsACIATQBlAHQAcgBpAGMATgBhAG0AZQAiADoAIgAiACwAIgBUAGgAcgBlAHMAaABvAGwAZAAiADoAMgAuADAALAAiAEEAbABlAHIAdABUAGUAbQBwAGwAYQB0AGUASQBkACIAOgAiACIALAAiAFIAdQBsAGUASQBkACIAOgAiACIALAAiAFIAdQBsAGUATgBhAG0AZQAiADoAIgAiACwAIgBSAHUAbABlAEQAZQBzAGMAcgBpAHAAdABpAG8AbgAiADoAIgAiACwAIgBSAGUAcwBvAHUAcgBjAGUASQBkACIAOgBuAHUAbABsACwAIgBTAHUAYgBzAGMAcgBpAHAAdABpAG8AbgBJAGQAIgA6AG4AdQBsAGwALAAiAEEAZwBnAHIAZQBnAGEAdABlAEYAdQBuAGMAdABpAG8AbgAiADoAIgAiACwAIgBDAG8AbQBwAGEAcgBpAHMAbwBuAE8AcABlAHIAYQB0AG8AcgAiADoAIgB7AFwAIgBCAGEAcwBlAGwAaQBuAGUAVABpAG0AZQBzAHAAYQBuAFwAIgA6AFwAIgAwADAAOgA0ADAAOgAwADAAXAAiACwAXAAiAEkAbgBzAGkAZwBoAHQAcwBTAGUAcgB2AGkAYwBlAEwAYQBnAFwAIgA6AFwAIgAwADAAOgAwADAAOgAwADAAXAAiACwAXAAiAEIAdQBmAGYAZQByAFQAaQBtAGUAXAAiADoAXAAiADAAMAA6ADAAMQA6ADAAMABcACIALABcACIAQgBsAG8AYgBTAHQAbwByAGEAZwBlAEwAbwBnAGcAaQBuAGcARQBuAGEAYgBsAGUAZABcACIAOgBmAGEAbABzAGUALABcACIAVQBzAGUARABlAGYAYQB1AGwAdABBAHAAcABGAG8AcgBFAG0AYQBpAGwAcwBcACIAOgBmAGEAbABzAGUALABcACIAVQBzAGUAcgBTAHUAcABwAHIAZQBzAHMAaQBvAG4AcwBcACIAOgBuAHUAbABsACwAXAAiAFAAcgBvAGYAaQBsAGUASQBkAFwAIgA6ADMANgA1ADkAMwAxADQALABcACIARQBtAGEAaQBsAFQAeQBwAGUAXAAiADoAMAAsAFwAIgBSAGEAdwBQAHIAbwBhAGMAdABpAHYAZQBSAHUAbABlAEMAbwBuAGYAaQBnAFwAIgA6AG4AdQBsAGwAfQAiACwAIgBFAG4AYQBiAGwAZQBTAGUAbgBkAEUAbQBhAGkAbABUAG8AQwB1AHMAdABvAG0AIgA6AGYAYQBsAHMAZQAsACIAQwB1AHMAdABvAG0ARQBtAGEAaQBsAHMARQBuAGMAbwBkAGUAZAAiADoAIgAiACwAIgBFAG4AYQBiAGwAZQBTAGUAbgBkAEUAbQBhAGkAbABUAG8ATwB3AG4AZQByAHMAIgA6AGYAYQBsAHMAZQB9AA=="
+                    },
+                    "threshold": 2,
+                    "windowSize": "PT1H"
+                },
+                "action": {
+                    "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleEmailAction",
+                    "sendToServiceOwners": true,
+                    "customEmails": []
+                }
+            },
+            "resources": [],
+            "dependsOn": [
+                "[resourceId('microsoft.insights/components', parameters('components_taskwebhectagon_name'))]"
+            ]
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/114d25c4-3f8f-4c41-83b1-22007178fc8c/resourceGroups/Tasks/providers/microsoft.insights/components/taskmobileappservice'.",
+            "type": "microsoft.insights/components",
+            "kind": "web",
+            "name": "[parameters('components_taskmobileappservice_name')]",
+            "apiVersion": "2014-04-01",
+            "location": "Central US",
+            "tags": {
+                "hidden-link:/subscriptions/114d25c4-3f8f-4c41-83b1-22007178fc8c/resourceGroups/Tasks/providers/Microsoft.Web/sites/TaskMobileAppService": "Resource"
+            },
+            "properties": {
+                "ApplicationId": "[parameters('components_taskmobileappservice_name')]"
+            },
+            "resources": [],
+            "dependsOn": []
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/114d25c4-3f8f-4c41-83b1-22007178fc8c/resourceGroups/Tasks/providers/microsoft.insights/components/taskservicehectagon'.",
+            "type": "microsoft.insights/components",
+            "kind": "web",
+            "name": "[parameters('components_taskservicehectagon_name')]",
+            "apiVersion": "2014-04-01",
+            "location": "Central US",
+            "tags": {
+                "hidden-link:/subscriptions/114d25c4-3f8f-4c41-83b1-22007178fc8c/resourceGroups/Tasks/providers/Microsoft.Web/sites/TaskServiceHectagon": "Resource"
+            },
+            "properties": {
+                "ApplicationId": "[parameters('components_taskservicehectagon_name')]"
+            },
+            "resources": [],
+            "dependsOn": []
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/114d25c4-3f8f-4c41-83b1-22007178fc8c/resourceGroups/Tasks/providers/microsoft.insights/components/taskwebhectagon'.",
+            "type": "microsoft.insights/components",
+            "kind": "web",
+            "name": "[parameters('components_taskwebhectagon_name')]",
+            "apiVersion": "2014-04-01",
+            "location": "Central US",
+            "tags": {
+                "hidden-link:/subscriptions/114d25c4-3f8f-4c41-83b1-22007178fc8c/resourceGroups/Tasks/providers/Microsoft.Web/sites/TaskWebHectagon": "Resource"
+            },
+            "properties": {
+                "ApplicationId": "[parameters('components_taskwebhectagon_name')]"
+            },
+            "resources": [],
+            "dependsOn": []
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/114d25c4-3f8f-4c41-83b1-22007178fc8c/resourceGroups/Tasks/providers/Microsoft.Logic/workflows/SendTaskCompleteEmail'.",
+            "type": "Microsoft.Logic/workflows",
+            "name": "[parameters('workflows_SendTaskCompleteEmail_name')]",
+            "apiVersion": "2016-06-01",
+            "location": "australiasoutheast",
+            "properties": {
+                "state": "Enabled",
+                "sku": {
+                    "name": "Standard",
+                    "plan": {
+                        "id": "[parameters('workflows_SendTaskCompleteEmail_id')]"
+                    }
+                },
+                "definition": {
+                    "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-04-01-preview/workflowdefinition.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {
+                        "$connections": {
+                            "defaultValue": {},
+                            "type": "Object"
+                        }
+                    },
+                    "triggers": {
+                        "manual": {
+                            "type": "Request",
+                            "kind": "Http",
+                            "inputs": {
+                                "schema": {
+                                    "$schema": "http://json-schema.org/draft-04/schema#",
+                                    "properties": {
+                                        "TaskId": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "required": [
+                                        "TaskId"
+                                    ],
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "actions": {
+                        "GetTask": {
+                            "runAfter": {},
+                            "type": "Http",
+                            "inputs": {
+                                "headers": {
+                                    "Ocp-Apim-Subscription-Key": "9136e387e7f0407c9b55214a14b7db58"
+                                },
+                                "method": "GET",
+                                "uri": "https://hectagonapi.azure-api.net/task/@{triggerBody()['TaskId']}"
+                            }
+                        },
+                        "Send_an_email": {
+                            "runAfter": {
+                                "GetTask": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "body": {
+                                    "Body": "Your task has been completed.\n\nTask name is: @{body('GetTask')['Name']}",
+                                    "Subject": "Task completed: @{body('GetTask')['Name']}",
+                                    "To": "nickward@microsoft.com"
+                                },
+                                "host": {
+                                    "api": {
+                                        "runtimeUrl": "https://logic-apis-australiasoutheast.azure-apim.net/apim/office365"
+                                    },
+                                    "connection": {
+                                        "name": "@parameters('$connections')['office365']['connectionId']"
+                                    }
+                                },
+                                "method": "post",
+                                "path": "/Mail"
+                            }
+                        }
+                    },
+                    "outputs": {}
+                },
+                "parameters": {
+                    "$connections": {
+                        "value": {
+                            "office365": {
+                                "connectionId": "[parameters('workflows_SendTaskCompleteEmail_connectionId')]",
+                                "connectionName": "office365-1",
+                                "id": "/subscriptions/114d25c4-3f8f-4c41-83b1-22007178fc8c/providers/Microsoft.Web/locations/australiasoutheast/managedApis/office365"
+                            }
+                        }
+                    }
+                }
+            },
+            "resources": [],
+            "dependsOn": []
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/114d25c4-3f8f-4c41-83b1-22007178fc8c/resourceGroups/Tasks/providers/Microsoft.Logic/workflows/SendTaskCompleteNotification'.",
+            "type": "Microsoft.Logic/workflows",
+            "name": "[parameters('workflows_SendTaskCompleteNotification_name')]",
+            "apiVersion": "2016-06-01",
+            "location": "australiasoutheast",
+            "properties": {
+                "state": "Enabled",
+                "sku": {
+                    "name": "Standard",
+                    "plan": {
+                        "id": "[parameters('workflows_SendTaskCompleteNotification_id')]"
+                    }
+                },
+                "definition": {
+                    "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-04-01-preview/workflowdefinition.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {},
+                    "triggers": {
+                        "manual": {
+                            "type": "Request",
+                            "kind": "Http",
+                            "inputs": {
+                                "schema": {
+                                    "$schema": "http://json-schema.org/draft-04/schema#",
+                                    "properties": {
+                                        "TaskId": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "required": [
+                                        "TaskId"
+                                    ],
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "actions": {
+                        "Condition": {
+                            "actions": {
+                                "SendPushNotification": {
+                                    "runAfter": {},
+                                    "type": "Http",
+                                    "inputs": {
+                                        "headers": {
+                                            "Content-Type": "application/json",
+                                            "Ocp-Apim-Subscription-Key": "9136e387e7f0407c9b55214a14b7db58"
+                                        },
+                                        "method": "POST",
+                                        "uri": "https://hectagonapi.azure-api.net/notifications/SendTaskCompletePushNotification?TaskName=@{body('GetTask')['Name']}"
+                                    }
+                                }
+                            },
+                            "runAfter": {
+                                "GetTask": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "expression": "@contains(body('GetTask')['Name'], 'URGENT')",
+                            "type": "If"
+                        },
+                        "GetTask": {
+                            "runAfter": {},
+                            "type": "Http",
+                            "inputs": {
+                                "headers": {
+                                    "Ocp-Apim-Subscription-Key": "9136e387e7f0407c9b55214a14b7db58"
+                                },
+                                "method": "GET",
+                                "uri": "https://hectagonapi.azure-api.net/task/@{triggerBody()['TaskId']}"
+                            }
+                        },
+                        "SendEmailNotification": {
+                            "runAfter": {
+                                "Condition": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "Http",
+                            "inputs": {
+                                "headers": {
+                                    "Content-Type": "application/json",
+                                    "Ocp-Apim-Subscription-Key": "9136e387e7f0407c9b55214a14b7db58"
+                                },
+                                "method": "POST",
+                                "uri": "https://hectagonapi.azure-api.net/notifications/SendTaskCompleteEmail/@{triggerBody()['TaskId']}"
+                            }
+                        }
+                    },
+                    "outputs": {}
+                },
+                "parameters": {}
+            },
+            "resources": [],
+            "dependsOn": []
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/114d25c4-3f8f-4c41-83b1-22007178fc8c/resourcegroups/Tasks/providers/Microsoft.NotificationHubs/namespaces/TasksNotificationHub'.",
+            "type": "Microsoft.NotificationHubs/namespaces",
+            "kind": "NotificationHub",
+            "name": "[parameters('namespaces_TasksNotificationHub_name')]",
+            "apiVersion": "2014-09-01",
+            "location": "Australia Southeast",
+            "tags": {},
+            "properties": {
+                "namespaceType": "NotificationHub"
+            },
+            "resources": [],
+            "dependsOn": []
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/114d25c4-3f8f-4c41-83b1-22007178fc8c/resourceGroups/Tasks/providers/Microsoft.Sql/servers/taskssql'.",
+            "type": "Microsoft.Sql/servers",
+            "kind": "v12.0",
+            "name": "[parameters('servers_taskssql_name')]",
+            "apiVersion": "2014-04-01-preview",
+            "location": "Australia East",
+            "properties": {
+                "administratorLogin": "nickward",
+                "administratorLoginPassword": null,
+                "version": "12.0"
+            },
+            "resources": [],
+            "dependsOn": []
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/114d25c4-3f8f-4c41-83b1-22007178fc8c/resourceGroups/tasks/providers/Microsoft.Storage/storageAccounts/function683e1a9a9c6b'.",
+            "type": "Microsoft.Storage/storageAccounts",
+            "sku": {
+                "name": "Standard_LRS",
+                "tier": "Standard"
+            },
+            "kind": "Storage",
+            "name": "[parameters('storageAccounts_function683e1a9a9c6b_name')]",
+            "apiVersion": "2016-01-01",
+            "location": "australiasoutheast",
+            "tags": {},
+            "properties": {},
+            "resources": [],
+            "dependsOn": []
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/114d25c4-3f8f-4c41-83b1-22007178fc8c/resourceGroups/Tasks/providers/Microsoft.Web/sites/TaskWebHectagon'.",
+            "type": "Microsoft.Web/sites",
+            "name": "[parameters('sites_TaskWebHectagon_name')]",
+            "apiVersion": "2015-08-01",
+            "location": "Australia Southeast",
+            "tags": {
+                "hidden-related:/subscriptions/114d25c4-3f8f-4c41-83b1-22007178fc8c/resourcegroups/JustServiceResourceGroup/providers/Microsoft.Web/serverfarms/JustServiceAppServicePlan": "empty"
+            },
+            "properties": {
+                "name": "[parameters('sites_TaskWebHectagon_name')]",
+                "hostNames": [
+                    "taskwebhectagon.azurewebsites.net"
+                ],
+                "enabledHostNames": [
+                    "taskwebhectagon.azurewebsites.net",
+                    "taskwebhectagon.scm.azurewebsites.net"
+                ],
+                "hostNameSslStates": [
+                    {
+                        "name": "[concat(parameters('sites_TaskWebHectagon_name'),'taskwebhectagon.azurewebsites.net')]",
+                        "sslState": 0,
+                        "thumbprint": null,
+                        "ipBasedSslState": 0
+                    },
+                    {
+                        "name": "[concat(parameters('sites_TaskWebHectagon_name'),'taskwebhectagon.scm.azurewebsites.net')]",
+                        "sslState": 0,
+                        "thumbprint": null,
+                        "ipBasedSslState": 0
+                    }
+                ],
+                "serverFarmId": "[parameters('sites_TaskWebHectagon_serverFarmId')]"
+            },
+            "resources": [],
+            "dependsOn": []
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/114d25c4-3f8f-4c41-83b1-22007178fc8c/resourceGroups/Tasks/providers/Microsoft.Web/sites/TaskPushNotificationSendService'.",
+            "type": "Microsoft.Web/sites",
+            "kind": "functionapp",
+            "name": "[parameters('sites_TaskPushNotificationSendService_name')]",
+            "apiVersion": "2015-08-01",
+            "location": "Australia Southeast",
+            "tags": {
+                "hidden-related:/subscriptions/114d25c4-3f8f-4c41-83b1-22007178fc8c/resourcegroups/JustServiceResourceGroup/providers/Microsoft.Web/serverfarms/JustServiceAppServicePlan": "empty"
+            },
+            "properties": {
+                "name": "[parameters('sites_TaskPushNotificationSendService_name')]",
+                "hostNames": [
+                    "taskpushnotificationsendservice.azurewebsites.net"
+                ],
+                "enabledHostNames": [
+                    "taskpushnotificationsendservice.azurewebsites.net",
+                    "taskpushnotificationsendservice.scm.azurewebsites.net"
+                ],
+                "hostNameSslStates": [
+                    {
+                        "name": "[concat(parameters('sites_TaskPushNotificationSendService_name'),'taskpushnotificationsendservice.azurewebsites.net')]",
+                        "sslState": 0,
+                        "thumbprint": null,
+                        "ipBasedSslState": 0
+                    },
+                    {
+                        "name": "[concat(parameters('sites_TaskPushNotificationSendService_name'),'taskpushnotificationsendservice.scm.azurewebsites.net')]",
+                        "sslState": 0,
+                        "thumbprint": null,
+                        "ipBasedSslState": 0
+                    }
+                ],
+                "serverFarmId": "[parameters('sites_TaskPushNotificationSendService_serverFarmId')]"
+            },
+            "resources": [],
+            "dependsOn": []
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/114d25c4-3f8f-4c41-83b1-22007178fc8c/resourceGroups/Tasks/providers/Microsoft.Web/sites/TaskServiceHectagon'.",
+            "type": "Microsoft.Web/sites",
+            "kind": "api",
+            "name": "[parameters('sites_TaskServiceHectagon_name')]",
+            "apiVersion": "2015-08-01",
+            "location": "Australia Southeast",
+            "tags": {
+                "hidden-related:/subscriptions/114d25c4-3f8f-4c41-83b1-22007178fc8c/resourcegroups/JustServiceResourceGroup/providers/Microsoft.Web/serverfarms/JustServiceAppServicePlan": "empty"
+            },
+            "properties": {
+                "name": "[parameters('sites_TaskServiceHectagon_name')]",
+                "hostNames": [
+                    "taskservicehectagon.azurewebsites.net"
+                ],
+                "enabledHostNames": [
+                    "taskservicehectagon.azurewebsites.net",
+                    "taskservicehectagon.scm.azurewebsites.net"
+                ],
+                "hostNameSslStates": [
+                    {
+                        "name": "[concat(parameters('sites_TaskServiceHectagon_name'),'taskservicehectagon.azurewebsites.net')]",
+                        "sslState": 0,
+                        "thumbprint": null,
+                        "ipBasedSslState": 0
+                    },
+                    {
+                        "name": "[concat(parameters('sites_TaskServiceHectagon_name'),'taskservicehectagon.scm.azurewebsites.net')]",
+                        "sslState": 0,
+                        "thumbprint": null,
+                        "ipBasedSslState": 0
+                    }
+                ],
+                "serverFarmId": "[parameters('sites_TaskServiceHectagon_serverFarmId')]"
+            },
+            "resources": [],
+            "dependsOn": []
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/114d25c4-3f8f-4c41-83b1-22007178fc8c/resourceGroups/Tasks/providers/Microsoft.Web/sites/TaskMobileAppService'.",
+            "type": "Microsoft.Web/sites",
+            "kind": "mobileapp",
+            "name": "[parameters('sites_TaskMobileAppService_name')]",
+            "apiVersion": "2015-08-01",
+            "location": "Australia Southeast",
+            "tags": {
+                "hidden-related:/subscriptions/114d25c4-3f8f-4c41-83b1-22007178fc8c/resourcegroups/JustServiceResourceGroup/providers/Microsoft.Web/serverfarms/JustServiceAppServicePlan": "empty"
+            },
+            "properties": {
+                "name": "[parameters('sites_TaskMobileAppService_name')]",
+                "hostNames": [
+                    "taskmobileappservice.azurewebsites.net"
+                ],
+                "enabledHostNames": [
+                    "taskmobileappservice.azurewebsites.net",
+                    "taskmobileappservice.scm.azurewebsites.net"
+                ],
+                "hostNameSslStates": [
+                    {
+                        "name": "[concat(parameters('sites_TaskMobileAppService_name'),'taskmobileappservice.azurewebsites.net')]",
+                        "sslState": 0,
+                        "thumbprint": null,
+                        "ipBasedSslState": 0
+                    },
+                    {
+                        "name": "[concat(parameters('sites_TaskMobileAppService_name'),'taskmobileappservice.scm.azurewebsites.net')]",
+                        "sslState": 0,
+                        "thumbprint": null,
+                        "ipBasedSslState": 0
+                    }
+                ],
+                "serverFarmId": "[parameters('sites_TaskMobileAppService_serverFarmId')]"
+            },
+            "resources": [],
+            "dependsOn": []
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/114d25c4-3f8f-4c41-83b1-22007178fc8c/resourcegroups/Tasks/providers/Microsoft.Cdn/profiles/TaskCDN/endpoints/taskwebhectagon'.",
+            "type": "Microsoft.Cdn/profiles/endpoints",
+            "name": "[parameters('endpoints_taskwebhectagon_name')]",
+            "apiVersion": "2016-04-02",
+            "location": "CentralUs",
+            "tags": {},
+            "properties": {
+                "originHostHeader": "taskwebhectagon.azurewebsites.net",
+                "isHttpAllowed": true,
+                "isHttpsAllowed": true,
+                "queryStringCachingBehavior": "UseQueryString",
+                "originPath": null,
+                "origins": [
+                    {
+                        "name": "taskwebhectagon-azurewebsites-net",
+                        "properties": {
+                            "hostName": "taskwebhectagon.azurewebsites.net",
+                            "httpPort": null,
+                            "httpsPort": null
+                        }
+                    }
+                ],
+                "contentTypesToCompress": [
+                    "application/x-javascript",
+                    "text/css",
+                    "text/html",
+                    "text/javascript",
+                    "text/plain"
+                ],
+                "isCompressionEnabled": false
+            },
+            "resources": [],
+            "dependsOn": [
+                "[resourceId('Microsoft.Cdn/profiles', parameters('profiles_TaskCDN_name'))]"
+            ]
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/114d25c4-3f8f-4c41-83b1-22007178fc8c/resourcegroups/Tasks/providers/Microsoft.Cdn/profiles/TaskCDN/endpoints/taskwebhectagon/origins/taskwebhectagon-azurewebsites-net'.",
+            "type": "Microsoft.Cdn/profiles/endpoints/origins",
+            "name": "[parameters('origins_taskwebhectagon_azurewebsites_net_name')]",
+            "apiVersion": "2016-04-02",
+            "properties": {
+                "hostName": "taskwebhectagon.azurewebsites.net",
+                "httpPort": null,
+                "httpsPort": null
+            },
+            "resources": [],
+            "dependsOn": [
+                "[resourceId('Microsoft.Cdn/profiles', parameters('profiles_TaskCDN_name'))]",
+                "[resourceId('Microsoft.Cdn/profiles/endpoints', parameters('endpoints_taskwebhectagon_name'))]"
+            ]
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/114d25c4-3f8f-4c41-83b1-22007178fc8c/resourceGroups/Tasks/providers/Microsoft.Logic/workflows/SendTaskCompleteEmail/accessKeys/default'.",
+            "type": "Microsoft.Logic/workflows/accessKeys",
+            "name": "[parameters('accessKeys_default_name')]",
+            "apiVersion": "2015-02-01-preview",
+            "properties": {},
+            "resources": [],
+            "dependsOn": [
+                "[resourceId('Microsoft.Logic/workflows', parameters('workflows_SendTaskCompleteEmail_name'))]"
+            ]
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/114d25c4-3f8f-4c41-83b1-22007178fc8c/resourceGroups/Tasks/providers/Microsoft.Logic/workflows/SendTaskCompleteNotification/accessKeys/default'.",
+            "type": "Microsoft.Logic/workflows/accessKeys",
+            "name": "[parameters('accessKeys_default_name_1')]",
+            "apiVersion": "2015-02-01-preview",
+            "properties": {},
+            "resources": [],
+            "dependsOn": [
+                "[resourceId('Microsoft.Logic/workflows', parameters('workflows_SendTaskCompleteNotification_name'))]"
+            ]
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/114d25c4-3f8f-4c41-83b1-22007178fc8c/resourcegroups/Tasks/providers/Microsoft.NotificationHubs/namespaces/TasksNotificationHub/notificationHubs/tasksnotificationhub'.",
+            "type": "Microsoft.NotificationHubs/namespaces/notificationHubs",
+            "name": "[parameters('notificationHubs_tasksnotificationhub_name')]",
+            "apiVersion": "2014-09-01",
+            "location": "Australia Southeast",
+            "properties": {
+                "authorizationRules": []
+            },
+            "resources": [],
+            "dependsOn": [
+                "[resourceId('Microsoft.NotificationHubs/namespaces', parameters('namespaces_TasksNotificationHub_name'))]"
+            ]
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/114d25c4-3f8f-4c41-83b1-22007178fc8c/resourceGroups/Tasks/providers/Microsoft.Sql/servers/taskssql/databases/TasksMobileAppServiceDB'.",
+            "type": "Microsoft.Sql/servers/databases",
+            "kind": "v12.0,user",
+            "name": "[parameters('databases_TasksMobileAppServiceDB_name')]",
+            "apiVersion": "2014-04-01-preview",
+            "location": "Australia East",
+            "properties": {
+                "databaseId": "c48b265c-5ff9-4184-a7b6-2b72168e99ee",
+                "edition": "Standard",
+                "status": "Online",
+                "serviceLevelObjective": "S2",
+                "collation": "SQL_Latin1_General_CP1_CI_AS",
+                "maxSizeBytes": "268435456000",
+                "creationDate": "2016-07-18T01:38:53.503Z",
+                "currentServiceObjectiveId": "455330e1-00cd-488b-b5fa-177c226f28b7",
+                "requestedServiceObjectiveId": "455330e1-00cd-488b-b5fa-177c226f28b7",
+                "requestedServiceObjectiveName": "S2",
+                "defaultSecondaryLocation": "Australia Southeast",
+                "earliestRestoreDate": "2016-07-18T01:49:27.483Z",
+                "elasticPoolName": null,
+                "containmentState": 2
+            },
+            "resources": [],
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_taskssql_name'))]"
+            ]
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/114d25c4-3f8f-4c41-83b1-22007178fc8c/resourceGroups/Tasks/providers/Microsoft.Sql/servers/taskssql/databases/TasksDB'.",
+            "type": "Microsoft.Sql/servers/databases",
+            "kind": "v12.0,user",
+            "name": "[parameters('databases_TasksDB_name')]",
+            "apiVersion": "2014-04-01-preview",
+            "location": "Australia East",
+            "properties": {
+                "databaseId": "32aa9a0b-6fae-4d6a-8efe-944124ba1dad",
+                "edition": "Standard",
+                "status": "Online",
+                "serviceLevelObjective": "S0",
+                "collation": "SQL_Latin1_General_CP1_CI_AS",
+                "maxSizeBytes": "268435456000",
+                "creationDate": "2016-07-13T01:39:36.14Z",
+                "currentServiceObjectiveId": "f1173c43-91bd-4aaa-973c-54e79e15235b",
+                "requestedServiceObjectiveId": "f1173c43-91bd-4aaa-973c-54e79e15235b",
+                "requestedServiceObjectiveName": "S0",
+                "defaultSecondaryLocation": "Australia Southeast",
+                "earliestRestoreDate": "2016-07-13T01:50:10.64Z",
+                "elasticPoolName": null,
+                "containmentState": 2
+            },
+            "resources": [],
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_taskssql_name'))]"
+            ]
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/114d25c4-3f8f-4c41-83b1-22007178fc8c/resourceGroups/Tasks/providers/Microsoft.Sql/servers/taskssql/databases/master'.",
+            "type": "Microsoft.Sql/servers/databases",
+            "kind": "v12.0,system",
+            "name": "[parameters('databases_master_name')]",
+            "apiVersion": "2014-04-01-preview",
+            "location": "Australia East",
+            "properties": {
+                "databaseId": "2720733d-0331-464c-8f72-ed10626e7819",
+                "edition": "System",
+                "status": "Online",
+                "serviceLevelObjective": "System0",
+                "collation": "SQL_Latin1_General_CP1_CI_AS",
+                "maxSizeBytes": "5368709120",
+                "creationDate": "2016-07-13T01:38:47.81Z",
+                "currentServiceObjectiveId": "29dd7459-4a7c-4e56-be22-f0adda49440d",
+                "requestedServiceObjectiveId": "29dd7459-4a7c-4e56-be22-f0adda49440d",
+                "requestedServiceObjectiveName": "System0",
+                "defaultSecondaryLocation": "Australia Southeast",
+                "earliestRestoreDate": null,
+                "elasticPoolName": null,
+                "containmentState": 2
+            },
+            "resources": [],
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_taskssql_name'))]"
+            ]
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/114d25c4-3f8f-4c41-83b1-22007178fc8c/resourceGroups/Tasks/providers/Microsoft.Sql/servers/taskssql/firewallRules/AllowAllWindowsAzureIps'.",
+            "type": "Microsoft.Sql/servers/firewallRules",
+            "kind": "v12.0",
+            "name": "[parameters('firewallRules_AllowAllWindowsAzureIps_name')]",
+            "apiVersion": "2014-04-01-preview",
+            "location": "Australia East",
+            "properties": {
+                "startIpAddress": "0.0.0.0",
+                "endIpAddress": "0.0.0.0"
+            },
+            "resources": [],
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_taskssql_name'))]"
+            ]
+        }
+    ]
+}
