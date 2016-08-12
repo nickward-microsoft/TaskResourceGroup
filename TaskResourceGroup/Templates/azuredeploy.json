@@ -66,158 +66,348 @@
       "type": "string",
       "defaultValue": "https://github.com/nickward-microsoft/TaskService.git"
     },
+    "TaskWebRepoURL": {
+      "type": "string",
+      "defaultValue": "https://github.com/nickward-microsoft/TaskWeb.git"
+    },
     "APIMKey": { "type": "securestring" },
     "APIMEndpoint": {
       "type": "string",
       "defaultValue": "https://hectagonapi.azure-api.net"
-    },
-    "TaskServiceAppInsightsInstrumentationKey": { "type": "securestring" }
+    }
   },
   "variables": {
     "tasksqlName": "[concat('tasksql', uniqueString(resourceGroup().id))]",
     "taskdbName": "TasksDB",
     "taskmobileappservicedbName": "TaskMobileAppServiceDB",
-      "TaskServiceName": "[concat('TaskService', uniqueString(resourceGroup().id))]"
+    "TaskServiceName": "[concat('TaskService', uniqueString(resourceGroup().id))]",
+    "TaskWebName": "[concat('TaskWeb', uniqueString(resourceGroup().id))]",
+    "singleQuote": "'"
   },
-    "resources": [
+  "resources": [
+    {
+      "name": "[variables('tasksqlName')]",
+      "type": "Microsoft.Sql/servers",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2014-04-01-preview",
+      "dependsOn": [ ],
+      "tags": {
+        "displayName": "tasksql"
+      },
+      "properties": {
+        "administratorLogin": "[parameters('tasksqlAdminLogin')]",
+        "administratorLoginPassword": "[parameters('tasksqlAdminLoginPassword')]"
+      },
+      "resources": [
         {
-            "name": "[variables('tasksqlName')]",
-            "type": "Microsoft.Sql/servers",
-            "location": "[resourceGroup().location]",
-            "apiVersion": "2014-04-01-preview",
-            "dependsOn": [ ],
-            "tags": {
-                "displayName": "tasksql"
-            },
-            "properties": {
-                "administratorLogin": "[parameters('tasksqlAdminLogin')]",
-                "administratorLoginPassword": "[parameters('tasksqlAdminLoginPassword')]"
-            },
-            "resources": [
-                {
-                    "name": "AllowAllWindowsAzureIps",
-                    "type": "firewallrules",
-                    "location": "[resourceGroup().location]",
-                    "apiVersion": "2014-04-01-preview",
-                    "dependsOn": [
-                        "[concat('Microsoft.Sql/servers/', variables('tasksqlName'))]"
-                    ],
-                    "properties": {
-                        "startIpAddress": "0.0.0.0",
-                        "endIpAddress": "0.0.0.0"
-                    }
-                },
-                {
-                    "name": "[variables('taskdbName')]",
-                    "type": "databases",
-                    "location": "[resourceGroup().location]",
-                    "apiVersion": "2014-04-01-preview",
-                    "dependsOn": [
-                        "[variables('tasksqlName')]"
-                    ],
-                    "tags": {
-                        "displayName": "taskdb"
-                    },
-                    "properties": {
-                        "collation": "[parameters('dbCollation')]",
-                        "edition": "[parameters('dbEdition')]",
-                        "maxSizeBytes": "1073741824",
-                        "requestedServiceObjectiveName": "[parameters('dbRequestedServiceObjectiveName')]"
-                    }
-                },
-                {
-                    "name": "[variables('taskmobileappservicedbName')]",
-                    "type": "databases",
-                    "location": "[resourceGroup().location]",
-                    "apiVersion": "2014-04-01-preview",
-                    "dependsOn": [
-                        "[variables('tasksqlName')]"
-                    ],
-                    "tags": {
-                        "displayName": "taskmobileappservicedb"
-                    },
-                    "properties": {
-                        "collation": "[parameters('dbCollation')]",
-                        "edition": "[parameters('dbEdition')]",
-                        "maxSizeBytes": "1073741824",
-                        "requestedServiceObjectiveName": "[parameters('dbRequestedServiceObjectiveName')]"
-                    }
-                }
-            ]
-        },
-        {
-            "name": "[parameters('TaskAppServicePlanName')]",
-            "type": "Microsoft.Web/serverfarms",
-            "location": "[resourceGroup().location]",
-            "apiVersion": "2014-06-01",
-            "dependsOn": [ ],
-            "tags": {
-                "displayName": "TaskAppServicePlan"
-            },
-            "properties": {
-                "name": "[parameters('TaskAppServicePlanName')]",
-                "sku": "[parameters('TaskAppServicePlanSKU')]",
-                "workerSize": "[parameters('TaskAppServicePlanWorkerSize')]",
-                "numberOfWorkers": 1
-            }
-        },
-        {
-          "name": "[variables('TaskServiceName')]",
-          "type": "Microsoft.Web/sites",
-          "kind": "api",
+          "name": "AllowAllWindowsAzureIps",
+          "type": "firewallrules",
           "location": "[resourceGroup().location]",
-          "apiVersion": "2015-08-01",
+          "apiVersion": "2014-04-01-preview",
           "dependsOn": [
-              "[concat('Microsoft.Web/serverfarms/', parameters('TaskAppServicePlanName'))]"
+            "[concat('Microsoft.Sql/servers/', variables('tasksqlName'))]"
+          ],
+          "properties": {
+            "startIpAddress": "0.0.0.0",
+            "endIpAddress": "0.0.0.0"
+          }
+        },
+        {
+          "name": "[variables('taskdbName')]",
+          "type": "databases",
+          "location": "[resourceGroup().location]",
+          "apiVersion": "2014-04-01-preview",
+          "dependsOn": [
+            "[variables('tasksqlName')]"
           ],
           "tags": {
-              "[concat('hidden-related:', resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('TaskAppServicePlanName'))]": "Resource",
-              "displayName": "TaskService"
+            "displayName": "taskdb"
           },
           "properties": {
-            "name": "[variables('TaskServiceName')]",
-            "serverFarmId": "[resourceId('Microsoft.Web/serverfarms/', parameters('TaskAppServicePlanName'))]",
-            "siteConfig": {
-              "connectionStrings": [
-                {
-                  "name": "TasksDb",
-                  "connectionString": "[concat('Server=tcp:', variables('tasksqlName'), '.database.windows.net,1433;Initial Catalog=', variables('taskdbName'), ';Persist Security Info=False;User ID=', parameters('tasksqlAdminLogin'), ';Password=', parameters('tasksqlAdminLoginPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;')]",
-                  "type": 2
-                }
-              ]
-            }
+            "collation": "[parameters('dbCollation')]",
+            "edition": "[parameters('dbEdition')]",
+            "maxSizeBytes": "1073741824",
+            "requestedServiceObjectiveName": "[parameters('dbRequestedServiceObjectiveName')]"
+          }
+        },
+        {
+          "name": "[variables('taskmobileappservicedbName')]",
+          "type": "databases",
+          "location": "[resourceGroup().location]",
+          "apiVersion": "2014-04-01-preview",
+          "dependsOn": [
+            "[variables('tasksqlName')]"
+          ],
+          "tags": {
+            "displayName": "taskmobileappservicedb"
           },
-          "resources": [
+          "properties": {
+            "collation": "[parameters('dbCollation')]",
+            "edition": "[parameters('dbEdition')]",
+            "maxSizeBytes": "1073741824",
+            "requestedServiceObjectiveName": "[parameters('dbRequestedServiceObjectiveName')]"
+          }
+        }
+      ]
+    },
+    {
+      "name": "[parameters('TaskAppServicePlanName')]",
+      "type": "Microsoft.Web/serverfarms",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2014-06-01",
+      "dependsOn": [ ],
+      "tags": {
+        "displayName": "TaskAppServicePlan"
+      },
+      "properties": {
+        "name": "[parameters('TaskAppServicePlanName')]",
+        "sku": "[parameters('TaskAppServicePlanSKU')]",
+        "workerSize": "[parameters('TaskAppServicePlanWorkerSize')]",
+        "numberOfWorkers": 1
+      }
+    },
+    {
+      "name": "[variables('TaskServiceName')]",
+      "type": "Microsoft.Web/sites",
+      "kind": "api",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2015-08-01",
+      "dependsOn": [
+        "[concat('Microsoft.Web/serverfarms/', parameters('TaskAppServicePlanName'))]"
+      ],
+      "tags": {
+        "[concat('hidden-related:', resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('TaskAppServicePlanName'))]": "Resource",
+        "displayName": "TaskService"
+      },
+      "properties": {
+        "name": "[variables('TaskServiceName')]",
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms/', parameters('TaskAppServicePlanName'))]",
+        "siteConfig": {
+          "connectionStrings": [
             {
-              "apiVersion": "2015-08-01",
-              "name": "web",
-              "type": "sourcecontrols",
-              "dependsOn": [ "[resourceId('Microsoft.Web/Sites', variables('TaskServiceName'))]" ],
-              "properties": {
-                "RepoUrl": "[parameters('TaskServiceRepoURL')]",
-                "branch": "master",
-                "IsManualIntegration": "true"
-              }
-            },
-              {
-                  "name": "appsettings",
-                  "type": "config",
-                  "apiVersion": "2015-08-01",
-                  "dependsOn": [
-                      "[concat('Microsoft.Web/sites/', variables('TaskServiceName'))]"
-                  ],
-                  "tags": {
-                      "displayName": "TaskServiceApiAppSettings"
-                  },
-                "properties": {
-                  "APPINSIGHTS_INSTRUMENTATIONKEY": "[parameters('TaskServiceAppInsightsInstrumentationKey')]",
-                  "APIMKey": "[parameters('APIMKey')]",
-                  "APIMEndpoint": "[parameters('APIMEndpoint')]"
-                }
-              }
+              "name": "TasksDb",
+              "connectionString": "[concat('Server=tcp:', variables('tasksqlName'), '.database.windows.net,1433;Initial Catalog=', variables('taskdbName'), ';Persist Security Info=False;User ID=', parameters('tasksqlAdminLogin'), ';Password=', parameters('tasksqlAdminLoginPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;')]",
+              "type": 2
+            }
           ]
         }
-    ],
+      },
+      "resources": [
+        {
+          "apiVersion": "2015-08-01",
+          "name": "web",
+          "type": "sourcecontrols",
+          "dependsOn": [ "[resourceId('Microsoft.Web/Sites', variables('TaskServiceName'))]" ],
+          "properties": {
+            "RepoUrl": "[parameters('TaskServiceRepoURL')]",
+            "branch": "master",
+            "IsManualIntegration": "true"
+          }
+        },
+        {
+          "name": "appsettings",
+          "type": "config",
+          "apiVersion": "2015-08-01",
+          "dependsOn": [
+            "[concat('Microsoft.Web/sites/', variables('TaskServiceName'))]",
+            "[concat(variables('TaskServiceName'),'AppInsights')]"
+          ],
+          "tags": {
+            "displayName": "TaskServiceApiAppSettings"
+          },
+          "properties": {
+            "AppInsightsKey": "[reference(resourceId('Microsoft.Insights/components', concat(variables('TaskServiceName'),'AppInsights')), '2014-04-01').InstrumentationKey]",
+            "APIMKey": "[parameters('APIMKey')]",
+            "APIMEndpoint": "[parameters('APIMEndpoint')]"
+          }
+        }
+      ]
+    },
+    {
+      "name": "[concat(variables('TaskServiceName'),'AppInsights')]",
+      "type": "Microsoft.Insights/components",
+      "location": "Central US",
+      "apiVersion": "2014-04-01",
+      "dependsOn": [
+        "[concat('Microsoft.Web/sites/', variables('TaskServiceName'))]"
+      ],
+      "tags": {
+        "displayName": "TaskServiceAppInsights"
+      },
+      "properties": {
+        "applicationId": "[variables('TaskServiceName')]"
+      }
+    },
+    {
+      "name": "[variables('TaskWebName')]",
+      "type": "Microsoft.Web/sites",
+      "kind": "web",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2015-08-01",
+      "dependsOn": [
+        "[concat('Microsoft.Web/serverfarms/', parameters('TaskAppServicePlanName'))]"
+      ],
+      "tags": {
+        "[concat('hidden-related:', resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('TaskAppServicePlanName'))]": "Resource",
+        "displayName": "TaskWeb"
+      },
+      "properties": {
+        "name": "[variables('TaskWebName')]",
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms/', parameters('TaskAppServicePlanName'))]",
+        "siteConfig": {
+        }
+      },
+      "resources": [
+        {
+          "apiVersion": "2015-08-01",
+          "name": "web",
+          "type": "sourcecontrols",
+          "dependsOn": [ "[resourceId('Microsoft.Web/Sites', variables('TaskWebName'))]" ],
+          "properties": {
+            "RepoUrl": "[parameters('TaskWebRepoURL')]",
+            "branch": "master",
+            "IsManualIntegration": "true"
+          }
+        },
+        {
+          "name": "appsettings",
+          "type": "config",
+          "apiVersion": "2015-08-01",
+          "dependsOn": [
+            "[concat('Microsoft.Web/sites/', variables('TaskWebName'))]",
+            "[concat(variables('TaskWebName'),'AppInsights')]"
+          ],
+          "tags": {
+            "displayName": "TaskWebWebAppSettings"
+          },
+          "properties": {
+            "AppInsightsKey": "[reference(resourceId('Microsoft.Insights/components', concat(variables('TaskWebName'),'AppInsights')), '2014-04-01').InstrumentationKey]",
+            "APIMKey": "[parameters('APIMKey')]",
+            "APIMEndpoint": "[parameters('APIMEndpoint')]"
+          }
+        }
+      ]
+    },
+    {
+      "name": "[concat(variables('TaskWebName'),'AppInsights')]",
+      "type": "Microsoft.Insights/components",
+      "location": "Central US",
+      "apiVersion": "2014-04-01",
+      "dependsOn": [
+        "[concat('Microsoft.Web/sites/', variables('TaskWebName'))]"
+      ],
+      "tags": {
+        "displayName": "TaskWebAppInsights"
+      },
+      "properties": {
+        "applicationId": "[variables('TaskWebName')]"
+      }
+    },
+    {
+      "type": "Microsoft.Web/connections",
+      "apiVersion": "2015-08-01-preview",
+      "location": "[resourceGroup().location]",
+      "name": "[concat('office365Connection', uniqueString(resourceGroup().id))]",
+      "properties": {
+        "api": {
+          "id": "[concat(subscription().id,'/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/office365')]"
+        },
+        "displayName": "Office 365 Outlook"
+      },
+      "tags": {"displayName": "Office365Connection"}
+    },
+    {
+      "type": "Microsoft.Logic/workflows",
+      "name": "SendTaskCompleteEmail",
+      "apiVersion": "2016-06-01",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "state": "Enabled",
+        "definition": {
+          "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+          "contentVersion": "1.0.0.0",
+          "parameters": {
+            "$connections": {
+              "defaultValue": { },
+              "type": "Object"
+            }
+          },
+          "triggers": {
+            "manual": {
+              "type": "Request",
+              "kind": "Http",
+              "inputs": {
+                "schema": {
+                  "$schema": "http://json-schema.org/draft-04/schema#",
+                  "properties": {
+                    "TaskId": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "TaskId"
+                  ],
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "actions": {
+            "GetTask": {
+              "runAfter": { },
+              "type": "Http",
+              "inputs": {
+                "headers": {
+                  "Ocp-Apim-Subscription-Key": "[parameters('APIMKey')]"
+                },
+                "method": "GET",
+                "uri": "[concat(parameters('APIMEndpoint'), '/task/@{triggerBody()[', variables('singleQuote'), 'TaskId', variables('singleQuote') ,']}')]"
+              }
+            },
+            "Send_an_email": {
+              "runAfter": {
+                "GetTask": [
+                  "Succeeded"
+                ]
+              },
+              "type": "ApiConnection",
+              "inputs": {
+                "body": {
+                  "Body": "Your task has been completed.\n\nTask name is: @{body('GetTask')['Name']}",
+                  "Subject": "Task completed: @{body('GetTask')['Name']}",
+                  "To": "nickward@microsoft.com"
+                },
+                "host": {
+                  "api": {
+                    "runtimeUrl": "https://logic-apis-australiasoutheast.azure-apim.net/apim/office365"
+                  },
+                  "connection": {
+                    "name": "@parameters('$connections')['office365']['connectionId']"
+                  }
+                },
+                "method": "post",
+                "path": "/Mail"
+              }
+            }
+          },
+          "outputs": { }
+        },
+        "parameters": {
+          "$connections": {
+            "value": {
+              "office365": {
+                "connectionId": "[resourceId('Microsoft.Web/connections', concat('office365Connection', uniqueString(resourceGroup().id)))]",
+                "connectionName": "[concat('office365Connection', uniqueString(resourceGroup().id))]",
+                "id": "[reference(concat('Microsoft.Web/connections/office365Connection', uniqueString(resourceGroup().id)), '2016-06-01').api.id]"
+              }
+            }
+          }
+        }
+      },
+      "resources": [ ],
+      "dependsOn": [ ]
+    }
+  ],
     "outputs": {
     }
 }
