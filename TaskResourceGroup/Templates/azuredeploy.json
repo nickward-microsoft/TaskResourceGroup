@@ -79,12 +79,14 @@
   "variables": {
     "tasksqlName": "[concat('tasksql', uniqueString(resourceGroup().id))]",
     "taskdbName": "TasksDB",
+    "TaskMobileServiceDBName": "TasksMobileServiceDB",
     "TaskServiceName": "[concat('TaskService', uniqueString(resourceGroup().id))]",
     "TaskWebName": "[concat('TaskWeb', uniqueString(resourceGroup().id))]",
     "TaskFunctionsName": "[concat('TaskFunctions',uniqueString(resourceGroup().id))]",
+    "TaskMobileServiceName": "[concat('TaskMobileService', uniqueString(resourceGroup().id))]",
     "TaskPushNotificationFunctionName": "TaskPushNotificationFunction",
     "TaskNotificationHubNamespace": "[concat('TaskNotificationHub',uniqueString(resourceGroup().id))]",
-    "TaskNotificationHubAppName": "TaskPushNotifications",
+    "TaskNotificationHubName": "TaskPushNotifications",
     "singleQuote": "'"
   },
   "resources": [
@@ -125,6 +127,24 @@
           ],
           "tags": {
             "displayName": "taskdb"
+          },
+          "properties": {
+            "collation": "[parameters('dbCollation')]",
+            "edition": "[parameters('dbEdition')]",
+            "maxSizeBytes": "1073741824",
+            "requestedServiceObjectiveName": "[parameters('dbRequestedServiceObjectiveName')]"
+          }
+        },
+        {
+          "name": "[variables('TaskMobileServiceDBName')]",
+          "type": "databases",
+          "location": "[resourceGroup().location]",
+          "apiVersion": "2014-04-01-preview",
+          "dependsOn": [
+            "[variables('tasksqlName')]"
+          ],
+          "tags": {
+            "displayName": "TaskMobileServiceDB"
           },
           "properties": {
             "collation": "[parameters('dbCollation')]",
@@ -407,7 +427,7 @@
     },
     {
       "apiVersion": "2014-09-01",
-      "name": "[concat(variables('TaskNotificationHubNamespace'), '/', variables('TaskNotificationHubAppName'))]",
+      "name": "[concat(variables('TaskNotificationHubNamespace'), '/', variables('TaskNotificationHubName'))]",
       "type": "Microsoft.NotificationHubs/namespaces/notificationHubs",
       "location": "[resourceGroup().location]",
       "dependsOn": [
@@ -460,12 +480,12 @@
           ]
         },
         "files": {
-          "index.js": "[concat('module.exports = function(context, req) {\r\n    context.log(', variables('singleQuote'), 'Node.js HTTP trigger function processed a request. RequestUri=%s', variables('singleQuote'), ', req.originalUrl);\r\n\r\n    if (req.query.TaskName || (req.body && req.body.TaskName)) {\r\n        var azure = require(', variables('singleQuote'), 'azure-sb', variables('singleQuote'), ');\r\n        \r\n        var notificationHubService = azure.createNotificationHubService(', variables('singleQuote'), 'TasksNotificationHub', variables('singleQuote'), ',', variables('singleQuote'), listkeys(resourceId('Microsoft.NotificationHubs/namespaces/notificationHubs/authorizationRules', variables('TaskNotificationHubNamespace'), variables('TaskNotificationHubAppName'), 'DefaultFullSharedAccessSignature'), '2014-09-01').primaryConnectionString, variables('singleQuote'), ');\r\n        \r\n        var payload = ', variables('singleQuote'), '<toast><visual><binding template=\"ToastText01\"><text id=\"1\">Task completed: ', variables('singleQuote'), ' + (req.query.TaskName || req.body.TaskName) + ', variables('singleQuote'), '!</text></binding></visual></toast>', variables('singleQuote'), ';\r\n        \r\n        notificationHubService.wns.send(null, payload , ', variables('singleQuote'), 'wns/toast', variables('singleQuote'), ', function(error){\r\n            if(!error){\r\n                // notification sent\r\n                context.res = {\r\n                body: \"Notification sent\"\r\n                    \r\n                };\r\n            }\r\n        });\r\n        \r\n        context.res = {\r\n            // status: 200, /* Defaults to 200 */\r\n            \r\nbody: \"Notification sent for task: \" + (req.query.TaskName || req.body.TaskName)\r\n        };\r\n    }\r\n    else {\r\n        context.res = {\r\n            status: 400,\r\n            body: \"Please pass a task name on the query string or in the request body\"\r\n        };\r\n    }\r\n       \r\n\r\n    context.done();\r\n};\r\n')]"
+          "index.js": "[concat('module.exports = function(context, req) {\r\n    context.log(', variables('singleQuote'), 'Node.js HTTP trigger function processed a request. RequestUri=%s', variables('singleQuote'), ', req.originalUrl);\r\n\r\n    if (req.query.TaskName || (req.body && req.body.TaskName)) {\r\n        var azure = require(', variables('singleQuote'), 'azure-sb', variables('singleQuote'), ');\r\n        \r\n        var notificationHubService = azure.createNotificationHubService(', variables('singleQuote'), variables('TaskNotificationHubName'), variables('singleQuote'), ',', variables('singleQuote'), listkeys(resourceId('Microsoft.NotificationHubs/namespaces/notificationHubs/authorizationRules', variables('TaskNotificationHubNamespace'), variables('TaskNotificationHubName'), 'DefaultFullSharedAccessSignature'), '2014-09-01').primaryConnectionString, variables('singleQuote'), ');\r\n        \r\n        var payload = ', variables('singleQuote'), '<toast><visual><binding template=\"ToastText01\"><text id=\"1\">Task completed: ', variables('singleQuote'), ' + (req.query.TaskName || req.body.TaskName) + ', variables('singleQuote'), '!</text></binding></visual></toast>', variables('singleQuote'), ';\r\n        \r\n        notificationHubService.wns.send(null, payload , ', variables('singleQuote'), 'wns/toast', variables('singleQuote'), ', function(error){\r\n            if(!error){\r\n                // notification sent\r\n                context.res = {\r\n                body: \"Notification sent\"\r\n                    \r\n                };\r\n            }\r\n        });\r\n        \r\n        context.res = {\r\n            // status: 200, /* Defaults to 200 */\r\n            \r\nbody: \"Notification sent for task: \" + (req.query.TaskName || req.body.TaskName)\r\n        };\r\n    }\r\n    else {\r\n        context.res = {\r\n            status: 400,\r\n            body: \"Please pass a task name on the query string or in the request body\"\r\n        };\r\n    }\r\n       \r\n\r\n    context.done();\r\n};\r\n')]"
         }
       },
       "dependsOn": [
         "[concat('Microsoft.Web/sites/', variables('TaskFunctionsName'))]",
-        "[variables('TaskNotificationHubAppName')]"
+        "[variables('TaskNotificationHubName')]"
       ]
     },
     {
@@ -476,7 +496,7 @@
       "properties": {
         "state": "Enabled",
         "definition": {
-          "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-04-01-preview/workflowdefinition.json#",
+          "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json",
           "contentVersion": "1.0.0.0",
           "parameters": { },
           "triggers": {
@@ -557,6 +577,69 @@
       },
       "resources": [ ],
       "dependsOn": [ ]
+    },
+    {
+      "apiVersion": "2015-08-01",
+      "type": "Microsoft.Web/sites",
+      "name": "[variables('TaskMobileServiceName')]",
+      "location": "[resourceGroup().location]",
+      "kind": "mobileapp",
+      "properties": {
+        "name": "[variables('TaskMobileServiceName')]",
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('TaskAppServicePlanName'))]"
+      },
+      "tags": {
+        "displayName": "TaskMobileService"
+      },
+      "dependsOn": [
+        "[parameters('TaskAppServicePlanName')]"
+      ],
+      "resources": [
+        {
+          "apiVersion": "2015-08-01",
+          "name": "appsettings",
+          "type": "config",
+          "dependsOn": [
+            "[variables('TaskMobileServiceName')]"
+          ],
+          "properties": {
+            "MS_MobileServiceName": "[variables('TaskMobileServiceName')]",
+            "MS_NotificationHubName": "[variables('TaskNotificationHubName')]"
+          }
+        },
+        {
+          "apiVersion": "2015-08-01",
+          "name": "connectionstrings",
+          "type": "config",
+          "dependsOn": [
+            "[variables('TaskMobileServiceName')]",
+            "[variables('TaskNotificationHubName')]",
+            "[variables('TaskMobileServiceDBName')]"
+          ],
+          "properties": {
+            "MS_TableConnectionString": {
+              "value": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', variables('tasksqlName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', variables('TaskMobileServiceDBName'), ';User Id=', parameters('tasksqlAdminLogin'), '@', variables('tasksqlName'), ';Password=', parameters('tasksqlAdminLoginPassword'), ';')]",
+              "type": "SQLServer"
+            },
+            "MS_NotificationHubConnectionString": {
+              "value": "[listkeys(resourceId('Microsoft.NotificationHubs/namespaces/notificationHubs/authorizationRules', variables('TaskNotificationHubNamespace'), variables('TaskNotificationHubName'), 'DefaultFullSharedAccessSignature'), '2014-09-01').primaryConnectionString]",
+              "type": "Custom"
+            }
+          }
+        },
+        {
+          "apiVersion": "2015-01-01",
+          "type": "providers/links",
+          "name": "Microsoft.Resources/SiteToHub",
+          "dependsOn": [
+            "[variables('TaskMobileServiceName')]",
+            "[variables('TaskNotificationHubName')]"
+          ],
+          "properties": {
+            "targetId": "[resourceId('Microsoft.NotificationHubs/namespaces/NotificationHubs', variables('TaskNotificationHubNamespace'), variables('TaskNotificationHubName'))]"
+          }
+        }
+      ]
     }
   ],
     "outputs": {
